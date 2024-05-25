@@ -850,15 +850,17 @@ class BranchesFilterWidget(QtWidgets.QWidget):
             return
         self._apply_bold(self._filter, False)
         self._filter = value
-        if value:
-            self._apply_bold(value, True)
+        self._apply_bold(value, True)
 
     def _apply_bold(self, value, is_bold):
         match = Qt.MatchContains | Qt.MatchRecursive
-        children = self.tree.findItems(value, match)
 
+        children = self.tree.findItems("", match)
         for child in children:
             if child.childCount() == 0:
-                font = child.font(0)
-                font.setBold(is_bold)
-                child.setFont(0, font)
+                child.setHidden(True)
+
+        children = self.tree.findItems(value, match)
+        for child in children:
+            if child.childCount() == 0:
+                child.setHidden(False)
